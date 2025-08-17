@@ -22,7 +22,7 @@ def score(entries: list) -> float | floating[Any]:
     return np.linalg.norm(entries)
 
 
-def change_column(M: np.array, v: np.array, col: int) -> np.array:
+def change_column(M: np.ndarray, v: np.ndarray, col: int) -> np.ndarray:
     """
     Replaces a specific column in matrix M with the values from vector v.
 
@@ -36,7 +36,7 @@ def change_column(M: np.array, v: np.array, col: int) -> np.array:
     return M
 
 
-def upper_triangle_entries(T: np.array, col: int) -> np.array:
+def upper_triangle_entries(T: np.ndarray, col: int) -> np.ndarray | None:
     """
     Extracts the upper triangular entries from a specified column of matrix T.
 
@@ -50,7 +50,7 @@ def upper_triangle_entries(T: np.array, col: int) -> np.array:
     return T[col + 1:, col]  # Extract only entries below diagonal
 
 
-def qr_decomposition(M: np.array) -> np.array:
+def qr_decomposition(M: np.ndarray) -> np.ndarray:
     """
     Performs a QR decomposition on a selected matrix M.
 
@@ -66,7 +66,7 @@ def qr_decomposition(M: np.array) -> np.array:
     return Q
 
 
-def generate_random_vector(size: int) -> np.array:
+def generate_random_vector(size: int) -> np.ndarray:
     """
     Generates a random normalized vector of a given size. Each entry is a real number.
 
@@ -77,7 +77,7 @@ def generate_random_vector(size: int) -> np.array:
     return x / np.linalg.norm(x)
 
 
-def perturbed_matrix(U: np.array, M: np.array) -> np.array:
+def perturbed_matrix(U: np.ndarray, M: np.ndarray) -> np.ndarray:
     """
     Computes the perturbed matrix by applying a similarity transformation
     and extracting only the strictly upper triangular part.
@@ -93,7 +93,7 @@ def perturbed_matrix(U: np.array, M: np.array) -> np.array:
     return -(U @ np.tril(U_M_U, -1) @ U.T)
 
 
-def triangularization_defect(M: np.array) -> float:
+def triangularization_defect(M: np.ndarray) -> float:
     """
     Computes the "defect" of the triangularization of a matrix, defined as
     the maximum absolute value of the entries in the matrix
@@ -104,11 +104,11 @@ def triangularization_defect(M: np.array) -> float:
     return np.max(np.abs(M))
 
 
-def column_cost(v: np.array,
+def column_cost(v: np.ndarray,
                 i: int,
-                M1: np.array,
-                M2: np.array,
-                U: np.array) -> float:
+                M1: np.ndarray,
+                M2: np.ndarray,
+                U: np.ndarray) -> float:
     """
     Computes the cost for a given vector `v` in terms of the triangularization
     quality of matrices M1 and M2 when replacing the i-th column of U.
@@ -137,7 +137,7 @@ def column_cost(v: np.array,
     return score(entries1)**2 + score(entries2)**2
 
 
-def joint_triangularization_defect(M1: np.array, M2: np.array) -> tuple:
+def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
     """
     Computes an approximate unitary matrix that jointly triangularizes two
     matrices M1 and M2 by minimizing the joint triangularization defect,
@@ -217,7 +217,7 @@ def joint_triangularization_defect(M1: np.array, M2: np.array) -> tuple:
     return MIN_EPSILON, U, delta_M1, delta_M2
 
 
-def print_matrix(label: str, matrix: np.array, decimals: int=8) -> None:
+def print_matrix(label: str, matrix: np.ndarray, decimals: int=8) -> None:
     """
     Prints a matrix in a human-readable format.
 

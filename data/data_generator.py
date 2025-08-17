@@ -9,7 +9,7 @@ def generate_data(num_pairs, size_range):
     # Dictionaries to hold pairs for each type
     pair_files = {'upper': [], 'lower': [], 'similarity': [], 'random': []}
 
-    for size in range(2, size_range):
+    for size in range(2, size_range + 1):
         for _ in range(num_pairs):
             # Upper triangular
             pair_files['upper'].append(__generate_upper_triangular_pair(size))
