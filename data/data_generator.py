@@ -46,25 +46,22 @@ def __generate_lower_triangular_pair(n: int) -> tuple:
     return A, B
 
 def __generate_similarity_transformed_pair(n: int) -> tuple:
-    # Randomly choose upper or lower
+    # Generate a base triangular pair
     if np.random.rand() < 0.5:
-        A = np.triu(random_log_uniform(LOW, HIGH, size=(n, n)))
+        A, B = __generate_upper_triangular_pair(n)
     else:
-        A = np.tril(random_log_uniform(LOW, HIGH, size=(n, n)))
+        A, B = __generate_lower_triangular_pair(n)
 
-    # Generate random invertible matrix S
+    # Generate a random invertible matrix S
     while True:
         S = random_log_uniform(LOW, HIGH, size=(n, n))
         if np.linalg.matrix_rank(S) == n:
             break
 
-    # Compute similarity transform
-    B = np.linalg.inv(S) @ A @ S
-
-    # Rescale B to be within [LOW, HIGH]
-    B_min, B_max = B.min(), B.max()
-    if B_min < LOW or B_max > HIGH:
-        B = LOW + (B - B_min) * (HIGH - LOW) / (B_max - B_min)
+    # Apply similarity transform
+    S_inv = np.linalg.inv(S)
+    A = S_inv @ A @ S
+    B = S_inv @ B @ S
 
     return A, B
 
