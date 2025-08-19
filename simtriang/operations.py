@@ -4,8 +4,9 @@ from scipy.optimize import minimize
 from typing import Any
 
 # CONSTANTS
-threshold = 2.22044605e-16
+threshold = 2.22044605e-22
 machine_epsilon = 1.1920929e-7
+condition_number_threshold = 10e14
 
 
 def score(entries: list) -> float | floating[Any]:
@@ -58,7 +59,7 @@ def qr_decomposition(M: np.ndarray) -> np.ndarray:
     :return: The Q matrix from the QR decomposition with small entries zeroed out
     """
     # Perform QR decomposition
-    Q, _ = np.linalg.qr(M)
+    Q, _ = np.linalg.qr(M, mode='complete')
 
     # Zero out very small entries for numerical stability
     Q[np.abs(Q) < machine_epsilon] = 0.0
@@ -164,6 +165,21 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
     - Assumes square matrices of the same dimension.
     - Does not guarantee exact simultaneous triangularization if none exists.
     """
+    # Convert matrices to float64 for improved numerical precision and stability
+    M1 = M1.astype(np.float64)
+    M2 = M2.astype(np.float64)
+
+    # Calculate norms for M1 and M2 for normalization
+    norm1 = np.linalg.norm(M1, ord='fro')
+    norm2 = np.linalg.norm(M2, ord='fro')
+    scale = max(norm1, norm2)
+
+    # Normalize matrices if the pair is ill-conditioned
+    if max(np.linalg.cond(M1), np.linalg.cond(M2)) > condition_number_threshold:
+        M1 = M1 / scale
+        M2 = M2 / scale
+
+    # Define variables
     SIZE = M1.shape[0]
     U = np.eye(SIZE)
     MIN_EPSILON = 0
