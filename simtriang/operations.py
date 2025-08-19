@@ -199,7 +199,7 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
                 v,
                 args=(i, M1, M2, U),
                 method='L-BFGS-B',
-                options={'maxiter': 200*SIZE, 'gtol': threshold, 'ftol': threshold}
+                options={'maxiter': 250*SIZE, 'gtol': threshold, 'ftol': threshold}
             )
 
             cost = res.fun
