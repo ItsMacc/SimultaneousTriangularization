@@ -168,14 +168,6 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
     U = np.eye(SIZE)
     MIN_EPSILON = 0
 
-    # Normalize matrices for improved numerical stability
-    norm1 = np.linalg.norm(M1, 'fro')
-    norm2 = np.linalg.norm(M2, 'fro')
-    scale = max(norm1, norm2, machine_epsilon)
-
-    M1_normalised = M1 / scale
-    M2_normalised = M2 /scale
-
     # Iteratively optimize each column of U
     for i in range(SIZE - 1):
         best_cost = float('inf')
@@ -189,7 +181,7 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
             res = minimize(
                 column_cost,
                 v,
-                args=(i, M1_normalised, M2_normalised, U),
+                args=(i, M1, M2, U),
                 method='L-BFGS-B',
                 options={'maxiter': 100*SIZE, 'gtol': threshold, 'ftol': threshold}
             )
@@ -208,8 +200,8 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
         U = change_column(U, best_v, i)
         U = qr_decomposition(U)
 
-    delta_M1 = perturbed_matrix(U, M1_normalised)
-    delta_M2 = perturbed_matrix(U, M2_normalised)
+    delta_M1 = perturbed_matrix(U, M1)
+    delta_M2 = perturbed_matrix(U, M2)
 
     MIN_EPSILON += max(triangularization_defect(delta_M1),
                        triangularization_defect(delta_M2))
