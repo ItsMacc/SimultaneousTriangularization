@@ -174,7 +174,7 @@ def joint_triangularization_defect(M1: np.ndarray, M2: np.ndarray) -> tuple:
         best_v = None
 
         # Multiple random initializations to avoid local minima (emperical)
-        for _ in range(int(5 * SIZE**1.2)):
+        for _ in range(int(6 * SIZE**1.2)):
             v = generate_random_vector(SIZE)
 
             # Minimize the column cost
